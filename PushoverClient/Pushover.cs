@@ -1,14 +1,10 @@
-﻿using Newtonsoft.Json;
-using System;
-using System.IO;
-using System.Net;
-using System.Net.Http;
-using System.Threading.Tasks;
+﻿using System.Net;
+using System.Text.Json;
 
 namespace PushoverClient
 {
     /// <summary>
-    /// Client library for using Pushover for push notifications.  
+    /// Client library for using Pushover for push notifications.
     /// See https://pushover.net/api for more information
     /// </summary>
     public class Pushover
@@ -22,7 +18,7 @@ namespace PushoverClient
         /// The shared http client
         /// </summary>
         private readonly HttpClient Client = new HttpClient();
-        
+
         /// <summary>
         /// The application key
         /// </summary>
@@ -52,7 +48,7 @@ namespace PushoverClient
 
         /// <summary>
         /// The interval (in seconds) before <see cref="Priority.Emergency"/>
-        /// messages expire. 
+        /// messages expire.
         /// </summary>
         public int EmergencyExpiryInterval { get; set; } = 300; // Seconds;
 
@@ -66,7 +62,7 @@ namespace PushoverClient
         }
 
         /// <summary>
-        /// Create a pushover client using both a source 
+        /// Create a pushover client using both a source
         /// application key and a default send key
         /// </summary>
         /// <param name="appKey"></param>
@@ -90,7 +86,7 @@ namespace PushoverClient
         public PushResponse Push(string title, string message, string userKey = "", string device = "", Priority priority = Priority.Normal, DateTime? timestamp = null, NotificationSound notificationSound = NotificationSound.NotSet, PushoverFileAttachment attachment = null)
         {
             ValidateAttachment(attachment);
-            var task = PostAsync(CreateArgs(title, message, userKey, device, priority, timestamp ?? DateTime.UtcNow, notificationSound), attachment);
+            Task<PushResponse> task = PostAsync(CreateArgs(title, message, userKey, device, priority, timestamp ?? DateTime.UtcNow, notificationSound), attachment);
             task.Wait();
             return task.Result;
         }
@@ -109,20 +105,20 @@ namespace PushoverClient
         public async Task<PushResponse> PushAsync(string title, string message, string userKey = "", string device = "", Priority priority = Priority.Normal, DateTime? timestamp = null, NotificationSound notificationSound = NotificationSound.NotSet, PushoverFileAttachment attachment = null)
         {
             ValidateAttachment(attachment);
-            return await PostAsync(CreateArgs(title, message, userKey, device, priority, timestamp ?? DateTime.UtcNow, notificationSound), attachment);          
+            return await PostAsync(CreateArgs(title, message, userKey, device, priority, timestamp ?? DateTime.UtcNow, notificationSound), attachment);
         }
 
         private PushoverRequestArguments CreateArgs(string title, string message, string userKey, string device, Priority priority, DateTime timestamp, NotificationSound notificationSound)
         {
             // Try the passed user key or fall back to default
-            var userGroupKey = string.IsNullOrEmpty(userKey) ? DefaultUserGroupSendKey : userKey;
+            string userGroupKey = string.IsNullOrEmpty(userKey) ? DefaultUserGroupSendKey : userKey;
 
             if (string.IsNullOrEmpty(userGroupKey))
             {
                 throw new ArgumentException("User key must be supplied", nameof(userKey));
             }
 
-            var args = new PushoverRequestArguments()
+            PushoverRequestArguments args = new PushoverRequestArguments()
             {
                 token = AppKey,
                 user = userGroupKey,
@@ -150,7 +146,7 @@ namespace PushoverClient
         private void ValidateAttachment(PushoverFileAttachment attachment)
         {
             // No attachment is fine.
-            if(attachment == null)
+            if (attachment == null)
             {
                 return;
             }
@@ -162,7 +158,7 @@ namespace PushoverClient
             StreamContent fileContent = null;
             try
             {
-                using (var content = new MultipartFormDataContent())
+                using (MultipartFormDataContent content = new MultipartFormDataContent())
                 {
                     // Add the required fields (or their defaults)
                     content.Add(new StringContent(args.token), "token");
@@ -189,7 +185,7 @@ namespace PushoverClient
                     // Make the request.
                     try
                     {
-                        var result = await Client.PostAsync(BASE_API_URL, content);
+                        HttpResponseMessage result = await Client.PostAsync(BASE_API_URL, content);
                         // Always try to read the body as the expected json result, even if the status code is not OK.
                         return await ReadStreamAsync(await result.Content.ReadAsStreamAsync());
                     }
@@ -202,7 +198,7 @@ namespace PushoverClient
             finally
             {
                 // Dispose of the file content, if there is one.
-                if(fileContent != null)
+                if (fileContent != null)
                 {
                     fileContent.Dispose();
                 }
@@ -211,9 +207,9 @@ namespace PushoverClient
 
         private async Task<PushResponse> ReadStreamAsync(Stream s)
         {
-            using (var sr = new StreamReader(s))
+            using (StreamReader sr = new StreamReader(s))
             {
-                return JsonConvert.DeserializeObject<PushResponse>(await sr.ReadToEndAsync());
+                return JsonSerializer.Deserialize<PushResponse>(await sr.ReadToEndAsync());
             }
         }
     }

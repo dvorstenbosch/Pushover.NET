@@ -1,8 +1,8 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 2012
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PushoverClient", "PushoverClient\PushoverClient.csproj", "{16E7D1FF-237A-4E89-94C6-FDDA36FBDDB0}"
-EndProject
+# Visual Studio Version 17
+VisualStudioVersion = 17.12.35521.163
+MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".nuget", ".nuget", "{A5A31361-3EC5-4504-97BD-FD86E6792D90}"
 	ProjectSection(SolutionItems) = preProject
 		.nuget\NuGet.Config = .nuget\NuGet.Config
@@ -10,9 +10,11 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".nuget", ".nuget", "{A5A313
 		.nuget\NuGet.targets = .nuget\NuGet.targets
 	EndProjectSection
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PushoverClient.Tests", "PushoverClient.Tests\PushoverClient.Tests.csproj", "{00C259B2-584F-4171-985C-A86498EACAAF}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PushoverClient", "PushoverClient\PushoverClient.csproj", "{3EC84EC5-86FB-479D-B9A1-193DF7369ED2}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SendPush", "SendPush\SendPush.csproj", "{6DB8F6AB-5003-4E57-80D8-D8A626D525DD}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SendPush", "SendPush\SendPush.csproj", "{ECFA498F-FDB4-4314-BE7C-F129C862D295}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PushoverClient.Tests", "PushoverClient.Tests\PushoverClient.Tests.csproj", "{67949296-391E-49AC-B727-A7C364DC2048}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -20,18 +22,18 @@ Global
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{16E7D1FF-237A-4E89-94C6-FDDA36FBDDB0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{16E7D1FF-237A-4E89-94C6-FDDA36FBDDB0}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{16E7D1FF-237A-4E89-94C6-FDDA36FBDDB0}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{16E7D1FF-237A-4E89-94C6-FDDA36FBDDB0}.Release|Any CPU.Build.0 = Release|Any CPU
-		{00C259B2-584F-4171-985C-A86498EACAAF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{00C259B2-584F-4171-985C-A86498EACAAF}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{00C259B2-584F-4171-985C-A86498EACAAF}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{00C259B2-584F-4171-985C-A86498EACAAF}.Release|Any CPU.Build.0 = Release|Any CPU
-		{6DB8F6AB-5003-4E57-80D8-D8A626D525DD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{6DB8F6AB-5003-4E57-80D8-D8A626D525DD}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{6DB8F6AB-5003-4E57-80D8-D8A626D525DD}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{6DB8F6AB-5003-4E57-80D8-D8A626D525DD}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3EC84EC5-86FB-479D-B9A1-193DF7369ED2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3EC84EC5-86FB-479D-B9A1-193DF7369ED2}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3EC84EC5-86FB-479D-B9A1-193DF7369ED2}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3EC84EC5-86FB-479D-B9A1-193DF7369ED2}.Release|Any CPU.Build.0 = Release|Any CPU
+		{ECFA498F-FDB4-4314-BE7C-F129C862D295}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{ECFA498F-FDB4-4314-BE7C-F129C862D295}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{ECFA498F-FDB4-4314-BE7C-F129C862D295}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{ECFA498F-FDB4-4314-BE7C-F129C862D295}.Release|Any CPU.Build.0 = Release|Any CPU
+		{67949296-391E-49AC-B727-A7C364DC2048}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{67949296-391E-49AC-B727-A7C364DC2048}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{67949296-391E-49AC-B727-A7C364DC2048}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{67949296-391E-49AC-B727-A7C364DC2048}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

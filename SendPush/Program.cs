@@ -1,59 +1,53 @@
-﻿using System;
-using System.Configuration;
-using PushoverClient;
+﻿using PushoverClient;
+using System.CommandLine;
+using System.CommandLine.Help;
 
-namespace SendPush
+Option<string> titleOption = new Option<string>(name: "--title", description: "The message title");
+titleOption.AddAlias("-t");
+Option<string> messageOption = new Option<string>(name: "--message", description: "The message");
+messageOption.AddAlias("-m");
+Option<string> fromOption = new Option<string>(name: "--from", description: "The Pushover api key to send the message from");
+fromOption.AddAlias("-f");
+Option<string> userOption = new Option<string>(name: "--user", description: "The Pushover api key to send the message to");
+userOption.AddAlias("-u");
+
+RootCommand rootCommand = new RootCommand("Send a message using the PushOver API");
+rootCommand.AddOption(titleOption);
+rootCommand.AddOption(messageOption);
+rootCommand.AddOption(fromOption);
+rootCommand.AddOption(userOption);
+
+rootCommand.SetHandler(SendMessageAsync, titleOption, messageOption, fromOption, userOption);
+
+await rootCommand.InvokeAsync(args);
+
+async Task SendMessageAsync(string title, string message, string from, string user)
 {
-    class Program
+    if (OptionsValid(title, message, from, user))
     {
-        static void Main(string[] args)
-        {
-            //  Get the settings defaults
-            string appKey = ConfigurationManager.AppSettings["appKey"];
-            string userGroupKey = ConfigurationManager.AppSettings["userGroupKey"];
-
-            //  Get the command line options
-            Options options = new Options();
-            if(CommandLine.Parser.Default.ParseArguments(args, options))
-            {
-                //  If we didn't get the app key passed in, use the default:
-                if(string.IsNullOrEmpty(options.From))
-                {
-                    options.From = appKey;
-                }
-
-                //  If we didn't get the user key passed in, use the default:
-                if(string.IsNullOrEmpty(options.User))
-                {
-                    options.User = userGroupKey;
-                }
-
-                //  Make sure we have our required items:
-                if(OptionsValid(options))
-                {
-                    //  Send the message
-                    Pushover pclient = new Pushover(options.From);
-                    PushResponse response = pclient.Push(options.Title, options.Message, options.User);
-                }
-                else
-                    Console.WriteLine(options.GetUsage());
-
-            }
-        }
-
-        static bool OptionsValid(Options options)
-        {
-            bool retval = false;
-
-            if(!string.IsNullOrEmpty(options.From) &&
-                !string.IsNullOrEmpty(options.User) &&
-                !string.IsNullOrEmpty(options.Title) &&
-                !string.IsNullOrEmpty(options.Message))
-            {
-                retval = true;
-            }
-
-            return retval;
-        }
+        //  Send the message
+        Pushover pclient = new Pushover(from);
+        PushResponse response = pclient.Push(title, message, user);
     }
+    else
+    {
+        HelpBuilder helpBuilder = new HelpBuilder(LocalizationResources.Instance);
+        helpBuilder.Write(new HelpContext(helpBuilder, rootCommand, Console.Out));
+    }
+    await Task.Delay(1000);
+}
+
+static bool OptionsValid(string title, string message, string from, string user)
+{
+    bool valid = false;
+
+    if (!string.IsNullOrEmpty(from) &&
+        !string.IsNullOrEmpty(user) &&
+        !string.IsNullOrEmpty(title) &&
+        !string.IsNullOrEmpty(message))
+    {
+        valid = true;
+    }
+
+    return valid;
 }

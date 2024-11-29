@@ -1,127 +1,123 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
-using System;
-using System.Threading.Tasks;
+﻿using FluentAssertions;
 
 namespace PushoverClient.Tests
 {
-    [TestClass]
     public class ClientTests
     {
         private const string TEST_APP_KEY = "YOURAPPKEY";
         private const string TEST_USER_KEY = "YOURUSERKEY";
 
-        [TestMethod]
+        [Fact]
         public void PushWithValidParms_ReturnsSuccessful()
         {
             //  Arrange
-            var title = "Test title";
-            var message = "This is a test push notification message";
+            string title = "Test title";
+            string message = "This is a test push notification message";
 
             //  Act
-            var pclient = new Pushover(TEST_APP_KEY);
-            var response = pclient.Push(title, message, TEST_USER_KEY);
+            Pushover pclient = new Pushover(TEST_APP_KEY);
+            PushResponse response = pclient.Push(title, message, TEST_USER_KEY);
 
             //  Assert
-            Assert.IsNotNull(response);
-            Assert.AreEqual(1, response.Status);
+            response.Should().NotBeNull();
+            response.Status.Should().Be(1);
         }
 
-        [TestMethod]
+        [Fact]
         public async Task PushAsyncWithValidParms_ReturnsSuccessful()
         {
             //  Arrange
-            var title = "Test title";
-            var message = "This is a test push notification message";
+            string title = "Test title";
+            string message = "This is a test push notification message";
 
             //  Act
-            var pclient = new Pushover(TEST_APP_KEY);
-            var response = await pclient.PushAsync(title, message, TEST_USER_KEY);
+            Pushover pclient = new Pushover(TEST_APP_KEY);
+            PushResponse response = await pclient.PushAsync(title, message, TEST_USER_KEY);
 
             //  Assert
-            Assert.IsNotNull(response);
-            Assert.AreEqual(1, response.Status);
+            response.Should().NotBeNull();
+            response.Status.Should().Be(1);
         }
 
-        [TestMethod]
-        [ExpectedException(typeof(ArgumentException))]
+        [Fact]
         public async Task PushWithNoKey_ReturnsError()
         {
             //  Arrange
-            var title = "Test title";
-            var message = "This is a test push notification message";
+            string title = "Test title";
+            string message = "This is a test push notification message";
 
             //  Act
-            var pclient = new Pushover(TEST_APP_KEY);
-            var response = await pclient.PushAsync(title, message);
+            Pushover pclient = new Pushover(TEST_APP_KEY);
+            Func<Task<PushResponse>> action = async () => await pclient.PushAsync(title, message);
 
             //  Assert - above code should error before this
-            Assert.Fail();
+            await action.Should().ThrowAsync<ArgumentException>();
         }
 
-        [TestMethod]
+        [Fact]
         public async Task PushWithDefaultKey_ReturnsSuccessful()
         {
             //  Arrange
-            var title = "Test title";
-            var message = "This is a test push notification message";
+            string title = "Test title";
+            string message = "This is a test push notification message";
 
             //  Act
-            var pclient = new Pushover(TEST_APP_KEY) { DefaultUserGroupSendKey = TEST_USER_KEY };
-            var response = await pclient.PushAsync(title, message);
+            Pushover pclient = new Pushover(TEST_APP_KEY) { DefaultUserGroupSendKey = TEST_USER_KEY };
+            PushResponse response = await pclient.PushAsync(title, message);
 
             //  Assert
-            Assert.IsNotNull(response);
-            Assert.AreEqual(1, response.Status);
+            response.Should().NotBeNull();
+            response.Status.Should().Be(1);
         }
 
-        [TestMethod]
+        [Fact]
         public async Task PushWithHighPriority_ReturnsSuccessful()
         {
             //  Arrange
-            var title = "Test title";
-            var message = "This is a test push notification message";
-            var priority = Priority.High;
+            string title = "Test title";
+            string message = "This is a test push notification message";
+            Priority priority = Priority.High;
 
             //  Act
-            var pclient = new Pushover(TEST_APP_KEY) { DefaultUserGroupSendKey = TEST_USER_KEY };
-            var response = await pclient.PushAsync(title, message, priority: priority);
+            Pushover pclient = new Pushover(TEST_APP_KEY) { DefaultUserGroupSendKey = TEST_USER_KEY };
+            PushResponse response = await pclient.PushAsync(title, message, priority: priority);
 
             //  Assert
-            Assert.IsNotNull(response);
-            Assert.AreEqual(1, response.Status);
+            response.Should().NotBeNull();
+            response.Status.Should().Be(1);
         }
 
-        [TestMethod]
+        [Fact]
         public async Task PushWithEmergencyPriority_ReturnsSuccessful()
         {
-          // Arrange
-          var title = "Test title";
-          var message = "This is a test push notification message";
-          var priority = Priority.Emergency;
+            // Arrange
+            string title = "Test title";
+            string message = "This is a test push notification message";
+            Priority priority = Priority.Emergency;
 
-          //  Act
-          var pclient = new Pushover(TEST_APP_KEY) { DefaultUserGroupSendKey = TEST_USER_KEY };
-          var response = await pclient.PushAsync(title, message, priority: priority);
+            //  Act
+            Pushover pclient = new Pushover(TEST_APP_KEY) { DefaultUserGroupSendKey = TEST_USER_KEY };
+            PushResponse response = await pclient.PushAsync(title, message, priority: priority);
 
-          //  Assert
-          Assert.IsNotNull(response);
-          Assert.AreEqual(1, response.Status);
+            //  Assert
+            response.Should().NotBeNull();
+            response.Status.Should().Be(1);
         }
 
-        [TestMethod]
+        [Fact]
         public async Task PushWithSound_ReturnsSuccessful()
         {
             //  Arrange
-            var title = "Test title";
-            var message = "This is a test push notification message";
+            string title = "Test title";
+            string message = "This is a test push notification message";
 
             //  Act
-            var pclient = new Pushover(TEST_APP_KEY) { DefaultUserGroupSendKey = TEST_USER_KEY };
-            var response = await pclient.PushAsync(title, message, notificationSound: NotificationSound.Alien);
+            Pushover pclient = new Pushover(TEST_APP_KEY) { DefaultUserGroupSendKey = TEST_USER_KEY };
+            PushResponse response = await pclient.PushAsync(title, message, notificationSound: NotificationSound.Alien);
 
             //  Assert
-            Assert.IsNotNull(response);
-            Assert.AreEqual(1, response.Status);
+            response.Should().NotBeNull();
+            response.Status.Should().Be(1);
         }
     }
 }
